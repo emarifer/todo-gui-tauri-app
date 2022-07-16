@@ -1,10 +1,12 @@
+
 .App {
   text-align: center;
 }
 
 .logo {
-  margin-top: 4rem;
-  height: 30vmin;
+  margin-top: 23vh;
+  margin-bottom: 2vh;
+  height: 23vmin;
   pointer-events: none;
 }
 
@@ -21,7 +23,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  font-size: calc(1vw + 1.5vmin);
   color: white;
 }
 
@@ -32,9 +34,9 @@
 li {
   list-style-type: none;
   background-color: green;
-  margin: 1rem;
-  padding: .75rem;
-  border-radius: 2rem;
+  margin: calc(1vw + 1.2vmin);
+  padding: calc(1vw + 0.75vmin);
+  border-radius: 15vw;
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
@@ -43,7 +45,7 @@ li {
 
 .todo {  
   min-width: 25vw;
-  max-width: 40vw;
+  max-width: 35vw;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
