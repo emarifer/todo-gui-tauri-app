@@ -1,0 +1,121 @@
+.App {
+  text-align: center;
+}
+
+.logo {
+  margin-top: 4rem;
+  height: 30vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+li {
+  list-style-type: none;
+  background-color: green;
+  margin: 1rem;
+  padding: .75rem;
+  border-radius: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.todo {  
+  min-width: 25vw;
+  max-width: 40vw;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: bold;
+  text-align: right;
+}
+
+.active {
+  background-color: green;
+}
+
+.inactive {
+  background-color: red;  
+}
+
+.parent {
+  text-align: center;
+}
+
+.add {
+  font-size: 1.5rem;
+  color: whitesmoke;
+  background-color: transparent;
+  border: none;
+  padding-top: 10px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.delete {
+  background-color: #DE6A13;
+  border-radius: 1.5rem;
+  margin-left: 1rem;
+}
+
+.completed {
+  background-color: #33AAFD;
+  border-radius: 1.5rem;
+  margin-left: 1rem;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+nav {
+  background-color: #282c34;
+  position: fixed;
+	top: 0;
+	width: 100%;
+  z-index: 2;
+  padding: 1rem 0 1rem 0;
+}
+
+button {
+  font-size: 1rem;
+  color: whitesmoke;
+  padding-top: 5px;
+}
+
+input {
+  height: 1.5rem;
+  width: 30vw;
+  border-radius: 1.5rem;
+  border: none;
+  margin-right: 1rem;
+  padding: 8px;
+  display: inline-block;
+  vertical-align: middle;
+}
