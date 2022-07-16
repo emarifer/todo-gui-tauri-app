@@ -3,6 +3,7 @@
 ---
 
 #### Task list application to test the creation of GUI's with Tauri/Rust.
+#### The frontend has been implemented with ReactJS + TS.
 
 ---
 
