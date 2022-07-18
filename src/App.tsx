@@ -1,46 +1,41 @@
 import { useEffect, useState } from 'react';
-import reactLogo from './assets/react.svg'
+import { Items } from './types';
+import { addTask, showData } from './backend/backend';
+
+import reactLogo from './assets/react.svg';
+
 import Swal from 'sweetalert2';
 
 import './App.css';
 import 'sweetalert2/dist/sweetalert2.min.css';
 
-import { invoke } from '@tauri-apps/api/tauri';
+import { ComponentItems } from './components';
 
-import { AiFillDelete } from 'react-icons/ai';
-import { MdUpdate } from 'react-icons/md';
 import { BsListTask } from 'react-icons/bs';
-
-interface Items {
-	[key: string]: [boolean, string, number];
-}
 
 export const App = () => {
 	const [data, setData] = useState<Items>({});
 
-	const [todo, setTodo] = useState<string>('');
+	const [newTodo, setNewTodo] = useState<string>('');
 
-	const showData = () => {
-		invoke('show_data')
-			.then((content) => {
-				setData(JSON.parse(content as string));
-			})
+	const displayTasks = () =>
+		showData()
+			.then((Items) => setData(Items))
 			.catch((error) => {
 				Swal.fire({
 					title: 'Error',
-					text: error,
+					text: error as string,
 					icon: 'error',
 					confirmButtonText: 'Ok',
 				});
 			});
-	};
 
-	const addTask = (key: string) => {
-		invoke('add_todo', { key: key })
+	const addTodo = (key: string) => {
+		addTask(key)
 			.then((content) => {
 				Swal.fire({
-					title: 'Éxito',
-					text: content as string,
+					title: 'Completado',
+					text: content,
 					icon: 'success',
 					confirmButtonText: 'Ok',
 				});
@@ -48,24 +43,21 @@ export const App = () => {
 			.catch((error) => {
 				Swal.fire({
 					title: 'Error',
-					text: error,
+					text: error as string,
 					icon: 'error',
 					confirmButtonText: 'Ok',
 				});
 			});
-		showData();
+		displayTasks();
 	};
 
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		event.preventDefault();
-		setTodo(event.target.value);
-
-		// console.log('value is:', event.target.value);
+		setNewTodo(event.target.value);
 	};
 
 	const handleClick = () => {
-		// console.log('handleClick 👉️', todo);
-		if (!todo || todo.length === 0) {
+		if (!newTodo || newTodo.length === 0) {
 			Swal.fire({
 				title: 'Info',
 				text: 'No has ingresado texto. 🤐',
@@ -74,12 +66,12 @@ export const App = () => {
 			});
 			return;
 		}
-		addTask(todo);
-		setTodo('');
+		addTodo(newTodo);
+		setNewTodo('');
 	};
 
 	useEffect(() => {
-		showData();
+		displayTasks();
 	}, []);
 
 	return (
@@ -93,7 +85,7 @@ export const App = () => {
 							id="message"
 							name="message"
 							onChange={handleChange}
-							value={todo}
+							value={newTodo}
 							autoComplete="off"
 						/>
 
@@ -105,88 +97,8 @@ export const App = () => {
 
 				<img src={reactLogo} className="logo" alt="reactLogo" />
 				<p>Mis Tareas:</p>
-				<Items show={showData} data={data} />
+				<ComponentItems show={displayTasks} data={data} />
 			</header>
-		</div>
-	);
-};
-
-type ComponentProps = {
-	data: Items;
-	show: () => void;
-};
-
-export const Items = ({ data, show }: ComponentProps) => {
-	const deleteTask = (key: string) => {
-		invoke('remove_todo', { key: key })
-			.then((content) => {
-				Swal.fire({
-					title: 'Éxito',
-					text: content as string,
-					icon: 'success',
-					confirmButtonText: 'Ok',
-				});
-			})
-			.catch((error) => {
-				Swal.fire({
-					title: 'Error',
-					text: error,
-					icon: 'error',
-					confirmButtonText: 'Ok',
-				});
-			});
-		show();
-	};
-
-	const completedTask = (key: string) => {
-		invoke('update_todo', { key: key })
-			.then((content) => {
-				Swal.fire({
-					title: 'Éxito',
-					text: content as string,
-					icon: 'success',
-					confirmButtonText: 'Ok',
-				});
-			})
-			.catch((error) => {
-				Swal.fire({
-					title: 'Error',
-					text: error,
-					icon: 'error',
-					confirmButtonText: 'Ok',
-				});
-			});
-		show();
-	};
-
-	const sortData = (data: [string, [boolean, string, number]][]) =>
-		data.sort((a, b) => b[1][2] - a[1][2]);
-
-	return (
-		<div>
-			{sortData(Object.entries(data)).map((task) => (
-				<li className={task[1][0] ? 'active' : 'inactive'} key={task[0]}>
-					<div title={task[0]} className="todo">
-						{task[0]}
-					</div>
-					:&nbsp;&nbsp;🕒&nbsp;&nbsp;
-					<div style={{ whiteSpace: 'nowrap' }}>{task[1][1]}</div>
-					<button
-						title="Completar"
-						className="completed"
-						onClick={() => completedTask(task[0])}
-					>
-						<MdUpdate />
-					</button>
-					<button
-						title="Eliminar"
-						className="delete"
-						onClick={() => deleteTask(task[0])}
-					>
-						<AiFillDelete />
-					</button>
-				</li>
-			))}
 		</div>
 	);
 };
@@ -197,4 +109,7 @@ export const Items = ({ data, show }: ComponentProps) => {
  *
  * ¿Cómo puedo forzar que los contenidos div permanezcan en una línea con HTML y CSS?:
  * https://stackoverflow.com/questions/5232310/how-can-i-force-div-contents-to-stay-in-one-line-with-html-and-css#39866955
+ *
+ * REFACTOR DE LA APLICACION USANDO IDEAS DE:
+ * https://github.com/Proful/dynaexplorer
  */
