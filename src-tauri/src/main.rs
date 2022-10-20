@@ -4,6 +4,7 @@
 )]
 
 use std::collections::HashMap;
+use tauri::{CustomMenuItem, Menu, MenuItem, Submenu};
 
 #[tauri::command]
 fn show_data() -> Result<HashMap<String, (bool, String, u64)>, String> {
@@ -71,7 +72,25 @@ fn update_todo(key: &str) -> Result<String, String> {
 }
 
 fn main() {
+    // let quit = CustomMenuItem::new("quit".to_string(), "Quit");
+    let close = CustomMenuItem::new("close".to_string(), "Close").accelerator("cmdOrControl+Q");
+    let submenu = Submenu::new("File", Menu::new().add_item(close));
+    let menu = Menu::new()
+        .add_native_item(MenuItem::Copy)
+        // .add_item(CustomMenuItem::new("hide", "Hide"))
+        .add_submenu(submenu);
+
     tauri::Builder::default()
+        .menu(menu)
+        .on_menu_event(|event| match event.menu_item_id() {
+            /*"quit" => {
+                std::process::exit(0);
+            }*/
+            "close" => {
+                event.window().close().unwrap();
+            }
+            _ => {}
+        })
         .invoke_handler(tauri::generate_handler![
             show_data,
             add_todo,
@@ -97,4 +116,8 @@ fn main() {
  *
  * MANEJO DE ERRORES EN RUST:
  * https://fettblog.eu/rust-error-handling/
+ *
+ * CREACIÓN DE MENÚS CON TAURI:
+ * https://tauri.app/v1/guides/features/menu/
+ * https://nikolas.blog/a-guide-for-tauri-part-2/
  */
