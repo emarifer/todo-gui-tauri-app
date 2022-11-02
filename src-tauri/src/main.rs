@@ -4,7 +4,7 @@
 )]
 
 use std::collections::HashMap;
-use tauri::{CustomMenuItem, Menu, MenuItem, Submenu};
+use tauri::{CustomMenuItem, Menu, Submenu};
 
 #[tauri::command]
 fn show_data() -> Result<HashMap<String, (bool, String, u64)>, String> {
@@ -72,22 +72,15 @@ fn update_todo(key: &str) -> Result<String, String> {
 }
 
 fn main() {
-    // let quit = CustomMenuItem::new("quit".to_string(), "Quit");
-    let close = CustomMenuItem::new("close".to_string(), "Close").accelerator("cmdOrControl+Q");
-    let submenu = Submenu::new("File", Menu::new().add_item(close));
-    let menu = Menu::new()
-        .add_native_item(MenuItem::Copy)
-        // .add_item(CustomMenuItem::new("hide", "Hide"))
-        .add_submenu(submenu);
+    let quit = CustomMenuItem::new("quit".to_string(), "Salir").accelerator("cmdOrControl+Q");
+    let submenu = Submenu::new("Archivo", Menu::new().add_item(quit));
+    let menu = Menu::new().add_submenu(submenu);
 
     tauri::Builder::default()
         .menu(menu)
         .on_menu_event(|event| match event.menu_item_id() {
-            /*"quit" => {
+            "quit" => {
                 std::process::exit(0);
-            }*/
-            "close" => {
-                event.window().close().unwrap();
             }
             _ => {}
         })
